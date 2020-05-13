@@ -6,32 +6,9 @@ const totalBalance = document.querySelector(".total__balance"),
   operationAmount = document.querySelector(".operation__amount"),
   form = document.getElementById("form");
 
-let dbOperation = [{
-    id: "1",
-    description: "Зарплата",
-    amount: 30000,
-  },
-  {
-    id: "2",
-    description: "Квартплата",
-    amount: -1500,
-  },
-  {
-    id: "3",
-    description: "Премия",
-    amount: 10000,
-  },
-  {
-    id: "4",
-    description: "Покупки продуктов",
-    amount: -1000,
-  },
-  {
-    id: "5",
-    description: "Отдых",
-    amount: -1000,
-  },
-];
+let dbOperation = [];
+
+let dbOperation = JSON.parse(localStorage.getItem("calc")) || [];
 
 // Function
 const generationId = () => `id${Math.round(Math.random() * 1e8).toString(16)}`
@@ -46,7 +23,7 @@ const renderOperation = (operation) => {
 
   listItem.innerHTML = `${operation.description}
   <span class="history__money">${operation.amount} ₴</span>
-  <button class="history_delete">x</button>`;
+  <button class="history_delete" data-id='${operation.id}'>x</button>`;
   historyList.append(listItem);
 };
 
@@ -91,14 +68,24 @@ const addOperation = (event) => {
   operationAmountValue.value = "";
 };
 
+const deleteOperation = (event) => {
+  const target = event.target;
+  if (event.target.classList.contains('history_delete')) {
+    dbOperation = dbOperation
+      .filter(operation => operation.id !== target.dataset.id);
+
+    init();
+  }
+}
+
 const init = () => {
   historyList.textContent = "";
   dbOperation.forEach(renderOperation);
   updateBalance();
+  localStorage.setItem('calc', JSON.stringify(dbOperation));
 };
 
 form.addEventListener('submit', addOperation)
+historyList.addEventListener('click', deleteOperation)
 
 init();
-
-// 02:04:00
