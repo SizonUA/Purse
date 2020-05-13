@@ -6,8 +6,6 @@ const totalBalance = document.querySelector(".total__balance"),
   operationAmount = document.querySelector(".operation__amount"),
   form = document.getElementById("form");
 
-let dbOperation = [];
-
 let dbOperation = JSON.parse(localStorage.getItem("calc")) || [];
 
 // Function
